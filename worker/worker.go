@@ -8,6 +8,9 @@ import (
 func Start(i int, c chan int, wg *sync.WaitGroup) {
 	fmt.Println("Worker ", i, " started!")
 
+	wg.Add(1) //портим код для неудачного коммтита и последующего отката
+	//этот код перенесем внутрь горутины и получим нестабильную непредсказуемую работу программы
+
 	c <- 1
 	wg.Done()
 }
