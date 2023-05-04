@@ -1,9 +1,29 @@
 package worker
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
-func start(c chan int, wg *sync.WaitGroup) {
-	wg.Add(1)
+func Start(i int, c chan int, wg *sync.WaitGroup) {
+	fmt.Println("Worker ", i, " started!")
+
 	c <- 1
 	wg.Done()
+}
+
+func Counter(wg *sync.WaitGroup) (chan int, *int) {
+
+	c := make(chan int)
+	var i *int = new(int)
+	*i = 0
+
+	go func(c chan int, i *int) {
+		for m := range c {
+			*i += m
+		}
+		wg.Done()
+	}(c, i)
+
+	return c, i
 }
